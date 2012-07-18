@@ -1,0 +1,68 @@
+// Example config file for vhost
+// NOTE: Go's built-in JSON parser doesn't like comments, so these
+// need to be removed from real config files for now :-(
+{
+    // Port to listen on
+    // Optional; default is 80
+    "port": 8080,
+
+    // 404 Not Found response
+    // Optional; a 404 page is generated if omitted
+    "notFound":
+    {
+        "file": "/etc/vhost/not_found.html"
+    },
+
+    // 500 Internal Error response
+    // This appears if there's a problem forwarding the incoming
+    // request to the backend server and there is no `internalError`
+    // defined for that server, or the `internalError` cannot be read
+    // Optional; a 500 page is generated if omitted
+    "internalError":
+    {
+        "file": "/etc/vhost/internal_error.html"
+    },
+
+    // Proxy configuration
+    "proxy": 
+    [
+        // Foward incoming requests to `fathafatha.com` to `localhost:7801`, eg
+        //
+        //     fathafatha.com/                       -> localhost:7801/
+        //     fathafatha.com/favicon.ico            -> localhost:7801/favicon.ico
+        //     fathafatha.com/users/john?edit=avatar -> localhost:7801/users/john?edit=avatar
+        //
+        // If the backend (localhost:7801) is unavailable, respond with
+        // a generated `500 Internal Error` HTML page (see `internalError`
+        // above)
+        {
+            "url": "fathafatha.com",
+            "backend": "http://localhost:7801"
+        },
+
+        // As above, but additionally if the backend (localhost:7802) 
+        // is unavailable, respond instead with the contents of 
+        // `/etc/conf/7802_error.txt`
+        {
+            "url": "bruhahaha.net",
+            "backend": "http://localhost:7802",
+            "internalError":
+            {
+                "file": "/etc/conf/7802_error.txt"
+            }
+        },
+
+        // As above, but if the backend is unavailable, respond
+        // instead with the contents of `/data/sites/7803/error.html`
+        // and specific response status code `503`
+        {
+            "url": "mwamwamwa.org",
+            "backend": "http://localhost:7803",
+            "internalError":
+            {
+                "file": "/data/sites/7803/error.html",
+                "statusCode": 503
+            }
+        },
+    ]
+}
