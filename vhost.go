@@ -122,8 +122,8 @@ func (rt *PanicyRoundTripper) RoundTrip(r *http.Request) (res *http.Response, er
 	return
 }
 
-var configFile = flag.String("config_file", "", "JSON config file. Required")
-
+// Config is the complete server config and what the JSON config file
+// is parsed into
 type Config struct {
 	Port          int
 	NotFound      *File
@@ -157,6 +157,8 @@ func applyConfig() *Vhost {
 
 	return &Vhost{config, servers, handlers}
 }
+
+var configFile = flag.String("config_file", "", "JSON config file. Required")
 
 func main() {
 	flag.Parse()
